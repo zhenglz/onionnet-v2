@@ -424,13 +424,17 @@ def main():
         dat = [x[0] for x in results]
         labels = [x[1] for x in results]
 
-    elecombin =list(itertools.product(elements_ligand, elements_protein)) \
-               * n_cutoffs.shape[0]
+    elecombin = list(itertools.product(elements_ligand, elements_protein))
     elecombin = ["_".join(x) for x in elecombin]
-    features = [elecombin[i]+"_"+str(i+1) for i in
-                range(len(elecombin) * n_cutoffs.shape[0])]
+    columns = []
+    for i in range(n_cutoffs.shape[0]):
+        columns += [e+"_"+str(i+1) for e in elecombin]
 
-    features = pd.DataFrame(dat, index=labels, columns=features)
+    features = pd.DataFrame(dat, index=labels, columns=columns)
     features.to_csv(args.out, header=True, index=True)
 
     print("INFO: Feature extraction completed.")
+
+
+if __name__ == "__main__":
+    main()

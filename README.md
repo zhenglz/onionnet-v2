@@ -12,11 +12,6 @@ The model could be applied for re-scoring the docking results.
 <p>Liangzhen Zheng, Nanyang Technological University, lzheng002_AT_e.ntu.edu.sg</p>
 
 
-## Citation
-<a href='https://arxiv.org/abs/1906.02418'>Zheng L, Fan J, Mu Y. OnionNet: a multiple-layer inter-molecular contact based convolutional
-neural network for protein-ligand binding affinity prediction[J]. arXiv preprint arXiv:1906.02418, 2019. </a>
-
-
 ## Installation
 Necessary packages should be installed to run the OnionNet model.
 
@@ -50,6 +45,10 @@ To install necessary environment, create a new env with conda commands
     python generate_features.py -h
     python predict_pKa.py -h
 
+Or simply run the following command to install necessary packages:
+
+    # Note: Internet connections are required.
+    bash ./install.sh
 
 ## Usage
 ### 1. Prepare the protein-ligand complexes (3D structures) in pdb format
@@ -88,4 +87,11 @@ the binding affinities (in pKa scale).
     python predict_pKa.py -h
     python predict_pKa.py -model OnionNet_HFree.model -scaler StandardScaler.model -fn features.csv -out output_predicted_pKa.csv
 
+
+## Citation
+<a href='https://arxiv.org/abs/1906.02418'>Zheng L, Fan J, Mu Y. OnionNet: a multiple-layer inter-molecular contact based convolutional
+neural network for protein-ligand binding affinity prediction[J]. arXiv preprint arXiv:1906.02418, 2019. </a>
+
+Zheng L, Fan J, Mu Y. OnionNet: a Multiple-Layer Intermolecular-Contact-Based Convolutional 
+Neural Network for Protein–Ligand Binding Affinity Prediction[J]. ACS omega, 2019, 4(14): 15956-15965.
 
