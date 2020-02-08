@@ -3,7 +3,8 @@
 #Check and install conda
 conda_exe=$(which conda)
 length_code=${#conda_exe}
-if [ $length_code -lt 0 ]; then
+
+if [ $length_code > 0 ]; then
   echo "Anaconda or Miniconda found in: $conda_exe"
 else
   echo "No anaconda or miniconda, installing miniconda3 now ..."
@@ -22,15 +23,16 @@ else
 fi
 
 #Create a python environment
-conda create -n onionnet python=3.6
-conda activate onionnet
+conda create -n onionnet python=3.6 -y
+source activate onionnet
+#conda activate onionnet
 #Install necessary python modules with conda
-conda install -c rdkit rdkit
-conda install -c omnia mdtraj
-conda install -c openbabel openbabel
-conda install biopandas -c conda-forge
-conda install numpy pandas scipy
-conda install tensorflow
+conda install -c rdkit rdkit -y
+conda install -c omnia mdtraj -y
+conda install -c openbabel openbabel -y
+conda install biopandas -c conda-forge -y
+conda install numpy pandas scipy -y
+conda install tensorflow-gpu -y
 
 #Finish installation
 echo "Installation completed. To use the package, please enable the environment by: "
