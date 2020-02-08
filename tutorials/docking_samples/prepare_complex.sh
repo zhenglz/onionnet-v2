@@ -1,17 +1,15 @@
 #!/bin/bash
 
-# get a list of vina out file list
-for pdbqt in ./*.pdbqt
+output=$1
+
+for d in ./* 
 do
-    # split the vinaout output poses into separated files
-    obabel $pdbqt -O ${pdbqt}_.pdb -m
 
-    # by default, only cat the first vina out pose with the receptor
-    cat ./receptor.pdb ${pdbqt}_0.pdb | awk '$1 ~ /ATOM/ {print $0}' > ${pdbqt}.complex.pdb
+  if [ -d $d ]; then
 
-    echo "Complete " $pdbqt
-
+    for pdbqt in $d/${d}_vinaout_*.pdb
+    do
+      echo "${d}/${d}_protein.pdb $pdbqt" >> $output
+    done
+  fi
 done
-
-# prepare an input file for the feature generation tool
-ll -rt ./*.complex.pdb > docked_complexes.list
