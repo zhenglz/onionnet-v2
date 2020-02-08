@@ -4,8 +4,10 @@ import numpy as np
 import pandas as pd
 import mdtraj as mt
 import itertools
-import re
 import sys, os, math
+import uuid
+import subprocess as sp
+import re
 
 try:
     from mpi4py import MPI
@@ -18,7 +20,7 @@ from rdkit import Chem
 
 
 class Molecule(object):
-    """Molecule parse object with Rdkit.
+    """Small molecule parser object with Rdkit package.
 
     Parameters
     ----------
@@ -60,9 +62,24 @@ class Molecule(object):
             "mol": Chem.MolFromMolFile,
             "smile": Chem.MolFromSmiles,
             "sdf": Chem.MolFromMolBlock,
+            "pdbqt": self.babel_converter,
         }
 
         return self
+
+    def babel_converter(self, mol_file):
+        if os.path.exists(mol_file):
+            try:
+                templ_file = str(hex(uuid.uuid4())) + ".pdb"
+                cmd = 'obabel %s -O %s > /dev/null' % (mol_file, templ_file)
+                job = sp.Popen(cmd, shell=True)
+                job.communicate()
+
+                self.molecule_ = self.converter_['pdb']()
+                os.remove(templ_file)
+                return self.molecule_
+            except:
+                return None
 
     def load_molecule(self, mol_file):
         """Load a molecule to have a rdkit.Chem.Molecule object
@@ -80,12 +97,12 @@ class Molecule(object):
         """
 
         self.mol_file = mol_file
-
-        if self.format not in ["mol2", "mol", "pdb", "sdf"]:
-            print("File format is not correct. ")
-            return None
-        elif not os.path.exists(self.mol_file):
+        if not os.path.exists(self.mol_file):
             print("Molecule file not exists. ")
+            return None
+
+        if self.format not in ["mol2", "mol", "pdb", "sdf", "pdbqt"]:
+            print("File format is not correct. ")
             return None
         else:
             try:
@@ -127,7 +144,7 @@ class ParseMolecule(Molecule):
 
 class ParseProtein(object):
 
-    def __init__(self, pdb_fn, ligcode="LIG"):
+    def __init__(self, pdb_fn):
 
         pdb = mt.load_pdb(pdb_fn)
 
@@ -144,19 +161,13 @@ class ParseProtein(object):
         -------
         self: an instance of itself
         """
-
-        pattern = re.compile("[A-Za-z]*")
-
-        res_seq = [str(x) for x in list(self.top.residues)]
-
-        self.seq = [pattern.match(x).group(0) for x in res_seq]
-
+        self.seq = self.top.to_fasta()
         self.n_residues = len(self.seq)
 
-        return self
+        return self.seq
 
     def contact_calpha(self, cutoff=0.5):
-        """Compute the Capha contact map.
+        """Compute the Capha contact map of the protein itself.
 
         Parameters
         ----------
@@ -184,7 +195,7 @@ class ParseProtein(object):
 
     def cal_distances(self, point_pair):
 
-        return np.sqrt(np.sum(point_pair[0] - point_pair[1]))
+        return np.sqrt(np.sum(np.square(point_pair[0] - point_pair[1])))
 
     def contacts_nbyn(self, cutoff, crds_p, crds_l, nbyn=True):
         """
