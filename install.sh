@@ -1,5 +1,9 @@
 #!/bin/bash
 
+mode="gpu"
+# or use cpu 
+# mode="cpu"
+
 #Check and install conda
 conda_exe=$(which conda)
 length_code=${#conda_exe}
@@ -32,7 +36,11 @@ conda install -c omnia mdtraj -y
 conda install -c openbabel openbabel -y
 conda install biopandas -c conda-forge -y
 conda install numpy pandas scipy -y
-conda install tensorflow-gpu -y
+if [ mode == "gpu" ]; then
+  conda install tensorflow-gpu -y
+else
+  conda install tensorflow -y 
+fi
 
 #Finish installation
 echo "Installation completed. To use the package, please enable the environment by: "
