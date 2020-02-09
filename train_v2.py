@@ -149,7 +149,7 @@ if __name__ == "__main__":
                         help="Input. The pKa colname as the target. ")
     parser.add_argument("-scaler", type=str, default="StandardScaler.model",
                         help="Output. The standard scaler file to save. ")
-    parser.add_argument("-model", type=str, default="DNN_Model.h5",
+    parser.add_argument("-model", type=str, default="DNN_Model_weights.h5",
                         help="Output. The trained DNN model file to save. ")
     parser.add_argument("-log", type=str, default="logger.csv",
                         help="Output. The logger file name to save. ")
@@ -223,7 +223,7 @@ if __name__ == "__main__":
                            batch_size=args.batch, epochs=args.epochs, verbose=1,
                            callbacks=[stop, logger, bestmodel])
 
-        model.save(args.model)
+        model.save_weights(args.model)
         print("Save model. ")
 
         ypred = model.predict(Xtest_v2016)
