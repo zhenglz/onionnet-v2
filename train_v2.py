@@ -145,8 +145,8 @@ if __name__ == "__main__":
                         help="Input. The PDBBind feature set.")
     parser.add_argument("-history", type=str, default="history.csv",
                         help="Output. The history information. ")
-    parser.add_argument("-pKa_col", type=str, default="pKx",
-                        help="Input. The pKa colname as the target. ")
+    parser.add_argument("-pKx_col", type=str, default="pKx",
+                        help="Input. The pKx colname as the target. ")
     parser.add_argument("-scaler", type=str, default="StandardScaler.model",
                         help="Output. The standard scaler file to save. ")
     parser.add_argument("-model", type=str, default="DNN_Model_weights.h5",
@@ -194,7 +194,7 @@ if __name__ == "__main__":
         Xs = pd.DataFrame(Xs, columns=df.columns.values, index=infor.index.values)
 
         X = Xs[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]
-        y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)][args.pKa_col].values
+        y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)][args.pKx_col].values
         print("Train, validate shape ", X.shape, y.shape)
 
         Xtrain, Xval, ytrain, yval = model_selection.train_test_split(X.values, y,
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         Xtest_v2016 = Xs[infor['is_v2016'] == 1].values.reshape((-1, args.reshape[0],
                                                                  args.reshape[1],
                                                                  args.reshape[2]))
-        ytest_v2016 = infor[infor['is_v2016'] == 1][args.pKa_col].values
+        ytest_v2016 = infor[infor['is_v2016'] == 1][args.pKx_col].values
         joblib.dump(scaler, args.scaler)
         print("DataSet Scaled")
 
@@ -215,13 +215,13 @@ if __name__ == "__main__":
         stop = tf.keras.callbacks.EarlyStopping(monitor='val_loss', min_delta=0.001, patience=20, verbose=1,
                                                 mode='auto', )
         logger = tf.keras.callbacks.CSVLogger(args.log, separator=',', append=False)
-        bestmodel = tf.keras.callbacks.ModelCheckpoint(filepath="bestmodel_" + args.model, verbose=1,
-                                                       save_best_only=True)
+        #bestmodel = tf.keras.callbacks.ModelCheckpoint(filepath="bestmodel_" + args.model, verbose=1,
+        #                                               save_best_only=True)
 
         # train the model
         history = model.fit(Xtrain, ytrain, validation_data=(Xval, yval),
                            batch_size=args.batch, epochs=args.epochs, verbose=1,
-                           callbacks=[stop, logger, bestmodel])
+                           callbacks=[stop, logger]) #bestmodel])
 
         model.save_weights(args.model)
         print("Save model. ")
