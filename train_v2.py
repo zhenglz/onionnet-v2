@@ -184,7 +184,7 @@ if __name__ == "__main__":
     df = pd.read_csv(args.fn_feat[0], index_col=0, header=0).dropna()
     print("DataFrame Shape", df.shape, args.fn_feat)
 
-    infor = pd.read_csv(args.fn_pkx, index_col=0, header=0)
+    infor = pd.read_csv(args.fn_pkx[0], index_col=0, header=0)
     print("DataSet Loaded")
 
     if args.train > 0:
@@ -193,8 +193,8 @@ if __name__ == "__main__":
         Xs = scaler.fit_transform(df.values)
         Xs = pd.DataFrame(Xs, columns=df.columns.values, index=df.index.values)
 
-        X = Xs[(~ infor['is_v2013']) & (~ infor['is_v2016'])]
-        y = infor[(~ infor['is_v2013']) & (~ infor['is_v2016'])]['pkx'].values
+        X = Xs[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]
+        y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]['pkx'].values
         print("Train, validate shape ", X.shape, y.shape)
 
         Xtrain, Xval, ytrain, yval = model_selection.train_test_split(X.values, y,
