@@ -145,7 +145,7 @@ if __name__ == "__main__":
                         help="Input. The PDBBind feature set.")
     parser.add_argument("-history", type=str, default="history.csv",
                         help="Output. The history information. ")
-    parser.add_argument("-pKa_col", type=str, nargs="+", default=["pKx", "pKa_true"],
+    parser.add_argument("-pKa_col", type=str, default="pKx",
                         help="Input. The pKa colname as the target. ")
     parser.add_argument("-scaler", type=str, default="StandardScaler.model",
                         help="Output. The standard scaler file to save. ")
