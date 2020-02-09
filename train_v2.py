@@ -35,7 +35,7 @@ def PCC_RMSE(y_true, y_pred):
 
     pcc = 1.0 - tf.keras.backend.mean(fsp * fst) / (devP * devT)
 
-    pcc = tf.where(tf.is_nan(pcc), 0.25, pcc)
+    #pcc = tf.where(tf.is_nan(pcc), 0.25, pcc)
 
     return alpha * pcc + (1 - alpha) * rmse
 
