@@ -191,7 +191,7 @@ if __name__ == "__main__":
 
         scaler = preprocessing.StandardScaler()
         Xs = scaler.fit_transform(df.values)
-        Xs = pd.DataFrame(Xs, columns=df.columns.values, index=df.index.values)
+        Xs = pd.DataFrame(Xs, columns=df.columns.values, index=infor.index.values)
 
         X = Xs[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]
         y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]['pkx'].values
