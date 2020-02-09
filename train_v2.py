@@ -145,7 +145,7 @@ if __name__ == "__main__":
                         help="Input. The PDBBind feature set.")
     parser.add_argument("-history", type=str, default="history.csv",
                         help="Output. The history information. ")
-    parser.add_argument("-pKa_col", type=str, nargs="+", default=["pki", "pKa_true"],
+    parser.add_argument("-pKa_col", type=str, nargs="+", default=["pKx", "pKa_true"],
                         help="Input. The pKa colname as the target. ")
     parser.add_argument("-scaler", type=str, default="StandardScaler.model",
                         help="Output. The standard scaler file to save. ")
@@ -194,7 +194,7 @@ if __name__ == "__main__":
         Xs = pd.DataFrame(Xs, columns=df.columns.values, index=infor.index.values)
 
         X = Xs[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]
-        y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)]['pkx'].values
+        y = infor[(infor['is_v2013'] == 0) & (infor['is_v2016'] == 0)][args.pKa_col].values
         print("Train, validate shape ", X.shape, y.shape)
 
         Xtrain, Xval, ytrain, yval = model_selection.train_test_split(X.values, y,
@@ -205,7 +205,7 @@ if __name__ == "__main__":
         Xtest_v2016 = Xs[infor['is_v2016'] == 1].values.reshape((-1, args.reshape[0],
                                                                  args.reshape[1],
                                                                  args.reshape[2]))
-        ytest_v2016 = infor[infor['is_v2016']]['pkx'].values
+        ytest_v2016 = infor[infor['is_v2016']][args.pKa_col].values
         joblib.dump(scaler, args.scaler)
         print("DataSet Scaled")
 
