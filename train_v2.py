@@ -205,7 +205,7 @@ if __name__ == "__main__":
         Xtest_v2016 = Xs[infor['is_v2016'] == 1].values.reshape((-1, args.reshape[0],
                                                                  args.reshape[1],
                                                                  args.reshape[2]))
-        ytest_v2016 = infor[infor['is_v2016']][args.pKa_col].values
+        ytest_v2016 = infor[infor['is_v2016'] == 1][args.pKa_col].values
         joblib.dump(scaler, args.scaler)
         print("DataSet Scaled")
 
