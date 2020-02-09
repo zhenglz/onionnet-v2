@@ -123,7 +123,7 @@ def create_model(input_size, lr=0.0001):
     model.add(tf.keras.layers.Activation("relu"))
 
     sgd = tf.keras.optimizers.SGD(lr=lr, momentum=0.9, decay=1e-6, )
-    model.compile(optimizer=sgd, loss=PCC_RMSE, metrics=["mse", PCC, RMSE])
+    model.compile(optimizer=sgd, loss='mse', metrics=[PCC, RMSE])
 
     return model
 
