@@ -226,7 +226,7 @@ if __name__ == "__main__":
         model.save_weights(args.model)
         print("Save model. ")
 
-        ypred = model.predict(Xtest_v2016).reval()
+        ypred = model.predict(Xtest_v2016).ravel()
         rmse_v2016 = rmse(ytest_v2016, ypred)
         pcc_v2016 = pcc(ytest_v2016, ypred)
         print("RMSE (v2016): %.3f \nPCC (v2016): %.3f \n" % (rmse_v2016, pcc_v2016))
