@@ -254,9 +254,27 @@ class LigandParser(object):
                 self.lig_file = out_file
 
             if os.path.exists(self.lig_file):
-                self.lig = PandasMol2().read_mol2(self.lig_file)
+                try:
+                    self.lig = PandasMol2().read_mol2(self.lig_file)
+                except ValueError:
+                    templ_ligfile = self.lig_file+"templ.pdb"
+                    self._format_convert(self.lig_file, templ_ligfile)
+                    if os.path.exists(templ_ligfile):
+                        self.lig = mt.load_pdb(templ_ligfile)
+                        top = self.lig.topolgy
+                        table, bond = top.to_dataframe()
+                        self.lig_ele = list(table['element'])
+                        self.coordinates_ = self.lig.xyz[0] * 10.0
+                        self.lig_data = table
+                        self.lig_data['x'] = self.coordinates_[:, 0]
+                        self.lig_data['y'] = self.coordinates_[:, 1]
+                        self.lig_data['z'] = self.coordinates_[:, 2]
+                        self.mol2_parsed_ = True
+                        os.remove(templ_ligfile)
+                        return self
             else:
                 return None
+
             self.lig_data = self.lig.df
             self.get_element()
             self.get_coordinates()
