@@ -181,7 +181,7 @@ if __name__ == "__main__":
     do_eval = False
     ytrue = []
 
-    df = pd.read_csv(args.fn_feat, index_col=0, header=0).dropna()
+    df = pd.read_csv(args.fn_feat[0], index_col=0, header=0).dropna()
     print("DataFrame Shape", df.shape, args.fn_feat)
 
     infor = pd.read_csv(args.fn_pkx, index_col=0, header=0)
