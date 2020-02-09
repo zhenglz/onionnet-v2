@@ -35,7 +35,7 @@ conda install -c rdkit rdkit -y
 conda install -c omnia mdtraj -y
 conda install -c openbabel openbabel -y
 conda install biopandas -c conda-forge -y
-conda install numpy pandas scipy -y
+conda install numpy pandas scipy scikit-learn -y
 if [ mode == "gpu" ]; then
   conda install tensorflow-gpu -y
 else
